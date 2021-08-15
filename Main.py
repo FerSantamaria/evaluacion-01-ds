@@ -22,14 +22,43 @@ def new(conn):
     print("===== Registro =====\n")
     
     for key, value in document_columns.items():
+
         new_ce[key] = input(f"{value}: ")
+
+        if key == "_id":
+            numeric = False
+            unique = False     
+
+            while not numeric or not unique:
+                numeric = is_numeric(new_ce[key])
+                
+                if not numeric:
+                    new_ce[key]= input("ERROR: El valor del Id debe ser numérico, ingrese un nuevo valor\nId: ")
+                    
+                else:
+                    unique = is_unique(conn, new_ce[key])
+
+                    if not unique:
+                        new_ce[key]= input("ERROR: El valor del Id se encuentra en uso, ingrese un nuevo valor\nId: ")
     
+    new_ce["_id"] = int(new_ce["_id"])
+
     inserted_ce = conn.insert_one(new_ce)
     print(f"\n{inserted_ce}")
 
+def is_numeric(id):
+    return id.isnumeric()
+
+def is_unique(conn, id):
+    return True if find(conn, id) is None else False
+
+def find(conn, id):
+   return  conn.find_one({"_id": int(id)})
 
 def update(conn):
-    print("Edición")
+    print("===== Actualización =====\n")
+
+    
 
 def delete(conn):
     print("Eliminación")
@@ -54,10 +83,10 @@ menu_options = {
 
 # ============= Main Program =============
 
-# Clearing terminal screen and displaying user menu
-clear_screen()
-
 while True: 
+    # Clearing terminal screen and displaying user menu
+    clear_screen()
+
     print("===== Administracion de Centros Escolares =====\n")
     print("Opciones:")
     print("1. Registrar")
@@ -69,10 +98,7 @@ while True:
 
     selected_option = input("\nElija una opción: ")
 
-    try:
-        selected_option = int(selected_option)
-    except ValueError:
-        selected_option = 0
+    selected_option = int(selected_option) if selected_option.isnumeric() else 0
 
     if selected_option >=1 and selected_option <= 5:
         clear_screen()
