@@ -34,7 +34,7 @@ def new(conn):
             numeric = False
             unique = False     
 
-            # Making sure id is numeri and unique
+            # Making sure id is numeric and unique
             while not numeric or not unique:
                 numeric = is_numeric(new_ce[key])
                 
