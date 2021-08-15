@@ -48,7 +48,6 @@ def new(conn):
                         new_ce[key]= input("ERROR: El valor del Id se encuentra en uso, ingrese un nuevo valor\nId: ")
     
     new_ce["_id"] = int(new_ce["_id"])
-
     conn.insert_one(new_ce)
 
     print(f"\nRegistro insertado con éxito")
@@ -78,8 +77,10 @@ def update(conn):
             conn.update_one({"_id": int(search_id)}, {"$set" : current_ce})
 
             print(f"\nRegistro actualizado con éxito")
+
         else: 
             print(f"\nNo se encontró ningún registro con ese Id ({search_id})")
+
     else: 
         print(f"\nId no válido")
 
@@ -98,8 +99,10 @@ def delete(conn):
 
             conn.delete_one({"_id": int(search_id)})
             print(f"\nRegistro eliminado con éxito")
+
         else: 
             print(f"\nNo se encontró ningún registro con ese Id ({search_id})")
+
     else: 
         print(f"\nId no válido")
 
@@ -160,8 +163,10 @@ while True:
 
         input("\nPresione enter para continuar...")
         clear_screen()
+
     elif selected_option == 6:
         print("\nTerminando ejecución")
         break
+
     else:
         input("\nOpción inválida. Presione enter para reintentar...")
