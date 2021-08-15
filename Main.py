@@ -17,19 +17,20 @@ document_columns = {
     "town": "Municipio"
 }
 
+#New document method
 def new(conn):
     new_ce = {}
 
     print("===== Registro =====\n")
-    s
+    
     for key, value in document_columns.items():
-
         new_ce[key] = input(f"{value}: ")
 
         if key == "_id":
             numeric = False
             unique = False     
 
+            # Making sure id is numeri and unique
             while not numeric or not unique:
                 numeric = is_numeric(new_ce[key])
                 
@@ -44,7 +45,7 @@ def new(conn):
     
     new_ce["_id"] = int(new_ce["_id"])
 
-    inserted_ce = conn.insert_one(new_ce)
+    conn.insert_one(new_ce)
     print(f"\nRegistro insertado con éxito")
 
 def is_numeric(id):
@@ -53,9 +54,28 @@ def is_numeric(id):
 def is_unique(conn, id):
     return True if conn.find_one({"_id": int(id)}) is None else False
 
+#Update document method
 def update(conn):
     print("===== Actualización =====\n")
-    
+    search_id = input("Ingrese el Id del centro escolar a editar: ")
+
+    if is_numeric(search_id):
+        current_ce = conn.find_one({"_id": int(search_id)})
+
+        if current_ce is not None:
+            del current_ce["_id"]
+            print("\nSi no desea realizar algún cambio, solo presione enter a cada uno de los campos que se le presentarán a continuación")
+        
+            for key, value in document_columns.items():
+                if key != "_id":
+                    new_value = input(f"Nuevo {value} (Actual: {current_ce[key]}): ")
+                    current_ce[key] = current_ce[key] if not new_value else new_value
+            
+            conn.update_one({"_id": int(search_id)}, {"$set" : current_ce})
+            print(f"\nRegistro actualizado con éxito")
+    else: 
+        print(f"\nNo se encontró ningún registro con ese Id ({search_id})")
+
 def delete(conn):
     print("Eliminación")
 
@@ -63,13 +83,15 @@ def read(conn):
     print("===== Catálogo =====\n")
     
     catalog_data = [data for data in conn.find()]
-    df_catalog_data = pd.DataFrame(catalog_data).rename(columns=document_columns).set_index('Id', )
-    print(df_catalog_data)
-    
+    print_data(catalog_data)
 
 def credits(conn):
     print("Desarrollado por: José Fernando Santamaría")
     print("https://github.com/FerSantamaria/evaluacion-01-ds")
+
+def print_data(data):
+    dataframe = pd.DataFrame(data).rename(columns=document_columns).set_index('Id')
+    print(dataframe)
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear') 
