@@ -1,3 +1,7 @@
+#Developed by Fernando Santamaría
+#https://github.com/FerSantamaria
+#2021-15-08
+
 import pandas as pd
 import pymongo
 import os
@@ -99,23 +103,28 @@ def delete(conn):
     else: 
         print(f"\nId no válido")
 
+# Read all documents method
 def read(conn):
     print("===== Catálogo =====\n")
     
     catalog_data = [data for data in conn.find()]
     print_data(catalog_data)
 
+#Developer's information method
 def credits(conn):
     print("Desarrollado por: José Fernando Flores Santamaría")
     print("https://github.com/FerSantamaria/evaluacion-01-ds")
 
+#Prints formatted data using pandas
 def print_data(data):
     dataframe = pd.DataFrame(data).rename(columns=document_columns).set_index('Id')
     print(dataframe)
 
+#Clear screen utility
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear') 
 
+#Menu options methods dictionary
 menu_options = {
     1: new,
     2: update,
