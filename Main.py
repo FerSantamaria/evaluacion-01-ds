@@ -46,6 +46,7 @@ def new(conn):
     new_ce["_id"] = int(new_ce["_id"])
 
     conn.insert_one(new_ce)
+
     print(f"\nRegistro insertado con éxito")
 
 def is_numeric(id):
@@ -63,7 +64,6 @@ def update(conn):
         current_ce = conn.find_one({"_id": int(search_id)})
 
         if current_ce is not None:
-            del current_ce["_id"]
             print("\nSi no desea realizar algún cambio, solo presione enter a cada uno de los campos que se le presentarán a continuación")
         
             for key, value in document_columns.items():
@@ -72,12 +72,32 @@ def update(conn):
                     current_ce[key] = current_ce[key] if not new_value else new_value
             
             conn.update_one({"_id": int(search_id)}, {"$set" : current_ce})
+
             print(f"\nRegistro actualizado con éxito")
+        else: 
+            print(f"\nNo se encontró ningún registro con ese Id ({search_id})")
     else: 
-        print(f"\nNo se encontró ningún registro con ese Id ({search_id})")
+        print(f"\nId no válido")
 
 def delete(conn):
-    print("Eliminación")
+    print("===== Eliminación =====\n")
+    search_id = input("Ingrese el Id del centro escolar a eliminar: ")
+
+    if is_numeric(search_id):
+        current_ce = conn.find({"_id": int(search_id)})
+
+        if current_ce is not None:
+            
+            current_ce_data = [data for data in current_ce]
+            print("\n")
+            print_data(current_ce_data)
+
+            conn.delete_one({"_id": int(search_id)})
+            print(f"\nRegistro eliminado con éxito")
+        else: 
+            print(f"\nNo se encontró ningún registro con ese Id ({search_id})")
+    else: 
+        print(f"\nId no válido")
 
 def read(conn):
     print("===== Catálogo =====\n")
