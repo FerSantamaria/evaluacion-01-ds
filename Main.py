@@ -79,16 +79,16 @@ def update(conn):
     else: 
         print(f"\nId no válido")
 
+# Delete document method
 def delete(conn):
     print("===== Eliminación =====\n")
     search_id = input("Ingrese el Id del centro escolar a eliminar: ")
 
     if is_numeric(search_id):
-        current_ce = conn.find({"_id": int(search_id)})
+        current_ce = conn.find_one({"_id": int(search_id)})
 
-        if current_ce is not None:
-            
-            current_ce_data = [data for data in current_ce]
+        if current_ce is not None:         
+            current_ce_data = [data for data in conn.find({"_id": int(search_id)})]
             print("\n")
             print_data(current_ce_data)
 
@@ -106,7 +106,7 @@ def read(conn):
     print_data(catalog_data)
 
 def credits(conn):
-    print("Desarrollado por: José Fernando Santamaría")
+    print("Desarrollado por: José Fernando Flores Santamaría")
     print("https://github.com/FerSantamaria/evaluacion-01-ds")
 
 def print_data(data):
