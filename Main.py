@@ -1,3 +1,4 @@
+import pandas as pd
 import pymongo
 import os
 
@@ -20,7 +21,7 @@ def new(conn):
     new_ce = {}
 
     print("===== Registro =====\n")
-    
+    s
     for key, value in document_columns.items():
 
         new_ce[key] = input(f"{value}: ")
@@ -34,7 +35,7 @@ def new(conn):
                 
                 if not numeric:
                     new_ce[key]= input("ERROR: El valor del Id debe ser numérico, ingrese un nuevo valor\nId: ")
-                    
+
                 else:
                     unique = is_unique(conn, new_ce[key])
 
@@ -44,27 +45,27 @@ def new(conn):
     new_ce["_id"] = int(new_ce["_id"])
 
     inserted_ce = conn.insert_one(new_ce)
-    print(f"\n{inserted_ce}")
+    print(f"\nRegistro insertado con éxito")
 
 def is_numeric(id):
     return id.isnumeric()
 
 def is_unique(conn, id):
-    return True if find(conn, id) is None else False
-
-def find(conn, id):
-   return  conn.find_one({"_id": int(id)})
+    return True if conn.find_one({"_id": int(id)}) is None else False
 
 def update(conn):
     print("===== Actualización =====\n")
-
     
-
 def delete(conn):
     print("Eliminación")
 
 def read(conn):
-    print("Consulta")
+    print("===== Catálogo =====\n")
+    
+    catalog_data = [data for data in conn.find()]
+    df_catalog_data = pd.DataFrame(catalog_data).rename(columns=document_columns).set_index('Id', )
+    print(df_catalog_data)
+    
 
 def credits(conn):
     print("Desarrollado por: José Fernando Santamaría")
